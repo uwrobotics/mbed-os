@@ -10,18 +10,20 @@ rules:
     mergeMethod: hardreset 
     mergeUnstable: true
     
-    # feature-cmake-object-libraries but with STM32 CMAKE fixes in ff0756d
-  - base: feature-cmake-object-libraries-with-stm32-compile-fix
+    # feature-cmake-object-libraries, with uwrt fixes
+  - base: uwrt
     upstream: feature-cmake-object-libraries
     mergeMethod: rebase 
     mergeUnstable: true
     assignees:              # Optional
       - wmmc88
+      - cindyli-13
     reviewers:              # Optional
       - cindyli-13
       - younesr1
     conflictReviewers:      # Optional, on merge conflict assign a reviewer
       - wmmc88
+      - cindyli-13
       
 label: ":arrow_heading_down: pull"  # Optional
 conflictLabel: "merge-conflict"     # Optional, on merge conflict assign a custom label, Default: merge-conflict
