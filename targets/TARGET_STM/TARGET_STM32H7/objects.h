@@ -97,39 +97,6 @@ struct serial_s {
 #endif
 };
 
-struct i2c_s {
-    /*  The 1st 2 members I2CName i2c
-     *  and I2C_HandleTypeDef handle should
-     *  be kept as the first members of this struct
-     *  to ensure i2c_get_obj to work as expected
-     */
-    I2CName  i2c;
-    I2C_HandleTypeDef handle;
-    uint8_t index;
-    int hz;
-    PinName sda;
-    PinName scl;
-    IRQn_Type event_i2cIRQ;
-    IRQn_Type error_i2cIRQ;
-    uint32_t XferOperation;
-    volatile uint8_t event;
-    volatile int pending_start;
-    int current_hz;
-#if DEVICE_I2CSLAVE
-    uint8_t slave;
-    volatile uint8_t pending_slave_tx_master_rx;
-    volatile uint8_t pending_slave_rx_maxter_tx;
-    uint8_t *slave_rx_buffer;
-    volatile uint16_t slave_rx_buffer_size;
-    volatile uint16_t slave_rx_count;
-#endif
-#if DEVICE_I2C_ASYNCH
-    uint32_t address;
-    uint8_t stop;
-    uint8_t available_events;
-#endif
-};
-
 struct analogin_s {
     ADC_HandleTypeDef handle;
     PinName pin;
@@ -139,7 +106,11 @@ struct analogin_s {
 
 #if DEVICE_QSPI
 struct qspi_s {
+#if defined(OCTOSPI1)
+    OSPI_HandleTypeDef handle;
+#else
     QSPI_HandleTypeDef handle;
+#endif
     QSPIName qspi;
     PinName io0;
     PinName io1;
@@ -147,6 +118,24 @@ struct qspi_s {
     PinName io3;
     PinName sclk;
     PinName ssel;
+};
+#endif
+
+#if DEVICE_OSPI
+struct ospi_s {
+    OSPI_HandleTypeDef handle;
+    OSPIName ospi;
+    PinName io0;
+    PinName io1;
+    PinName io2;
+    PinName io3;
+    PinName io4;
+    PinName io5;
+    PinName io6;
+    PinName io7;
+    PinName sclk;
+    PinName ssel;
+    PinName dqs;
 };
 #endif
 

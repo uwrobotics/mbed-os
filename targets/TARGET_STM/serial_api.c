@@ -205,6 +205,7 @@ void serial_init(serial_t *obj, PinName tx, PinName rx)
 
     uint8_t stdio_config = false;
 
+#if defined(MBED_CONF_TARGET_CONSOLE_UART)
     if ((tx == CONSOLE_TX) || (rx == CONSOLE_RX)) {
         stdio_config = true;
     } else {
@@ -212,6 +213,7 @@ void serial_init(serial_t *obj, PinName tx, PinName rx)
             error("Error: new serial object is using same UART as STDIO");
         }
     }
+#endif
 
     const serial_pinmap_t explicit_uart_pinmap = {peripheral, tx, tx_function, rx, rx_function, stdio_config};
 
@@ -629,8 +631,12 @@ HAL_StatusTypeDef init_uart(serial_t *obj)
 #if defined(UART_ONE_BIT_SAMPLE_DISABLE) // F0/F3/F7/G0/H7/L0/L4/L5/WB
     huart->Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
 #endif
-#if defined(UART_PRESCALER_DIV1) // G0/H7/L4/L5/WB
-    huart->Init.ClockPrescaler = UART_PRESCALER_DIV1;
+#if defined(UART_PRESCALER_DIV1) // G0/G4/H7/L4/L5/U5/WB/WL
+    if (obj_s->baudrate < 4800) {
+        huart->Init.ClockPrescaler = UART_PRESCALER_DIV16;
+    } else {
+        huart->Init.ClockPrescaler = UART_PRESCALER_DIV1;
+    }
 #endif
 #if defined(UART_ADVFEATURE_NO_INIT) // F0/F3/F7/G0/H7/L0/L4//5/WB
     huart->AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
